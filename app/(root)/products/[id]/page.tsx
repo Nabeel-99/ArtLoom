@@ -2,7 +2,7 @@
 import ArtCard from "@/components/ArtCard";
 import { useCart } from "@/components/context/CartContext";
 import { Button } from "@/components/ui/button";
-import { artData, ArtData } from "@/lib/utils";
+import { artData, ArtData, formatMoneyDisplay } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -114,7 +114,7 @@ const page = ({ params }: { params: Promise<{ id: string }> }) => {
               <span>{art.category}</span>
             </div>
           </div>
-          <p className="font-medium">${art.price}.00</p>
+          <p className="font-medium">{formatMoneyDisplay(art.price)}</p>
           <p className="font-medium">Artist</p>
           <p>{art.artist}</p>
           <p className="font-medium">Description</p>
@@ -151,7 +151,7 @@ const page = ({ params }: { params: Promise<{ id: string }> }) => {
                   <div className="flex justify-between items-start w-full">
                     <div className="flex flex-col">
                       <h3 className="font-medium">{relatedArt.title}</h3>
-                      <p className="">${relatedArt.price}</p>
+                      <p className="">{formatMoneyDisplay(relatedArt.price)}</p>
                     </div>
                     <div className="border flex items-center justify-center rounded-xl p-1 px-2 text-sm  bg-[#282828] text-white">
                       <span>{relatedArt.category}</span>

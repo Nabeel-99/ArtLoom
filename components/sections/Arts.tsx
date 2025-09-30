@@ -1,6 +1,6 @@
 "use client";
 
-import { artData, artImages } from "@/lib/utils";
+import { artData, artImages, formatMoneyDisplay } from "@/lib/utils";
 import React, { useState } from "react";
 import ArtCard from "../ArtCard";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -50,7 +50,7 @@ const Arts = () => {
               <div className="flex justify-between items-start w-full">
                 <div className="flex flex-col">
                   <h3 className="font-medium">{art.title}</h3>
-                  <p className="">${art.price}</p>
+                  <p className="">{formatMoneyDisplay(art.price)}</p>
                 </div>
                 <div className="border flex items-center justify-center rounded-xl p-1 px-2 text-sm  bg-[#282828] text-white">
                   <span>{art.category}</span>

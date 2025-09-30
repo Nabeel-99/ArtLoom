@@ -5,6 +5,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Money formatting utilities for dollar amounts
+export const formatMoney = (dollars: number): string => {
+  return dollars.toFixed(2);
+};
+
+export const formatMoneyDisplay = (dollars: number): string => {
+  return `$${formatMoney(dollars)}`;
+};
+
+export const addMoney = (dollars1: number, dollars2: number): number => {
+  return dollars1 + dollars2;
+};
+
+export const multiplyMoney = (dollars: number, multiplier: number): number => {
+  return dollars * multiplier;
+};
+
 export const artImages = [
   "/art1.png",
   "/art2.png",

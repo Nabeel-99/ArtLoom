@@ -18,10 +18,12 @@ import {
 } from "./ui/sheet";
 import { useCart } from "./context/CartContext";
 import Image from "next/image";
+import CartItems from "./CartItems";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const openBurgerMenu = () => setIsOpen(!isOpen);
-  const { cart, removeFromCart } = useCart();
+  const { cart } = useCart();
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -52,7 +54,7 @@ const Navbar = () => {
           </li>
         </ul>
         <div className="flex items-center gap-6">
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <button type="button" className="relative cursor-pointer ">
                 <CiShoppingCart className="text-3xl" />
@@ -65,42 +67,19 @@ const Navbar = () => {
               <SheetHeader>
                 <SheetTitle>Cart Items</SheetTitle>
               </SheetHeader>
-              <div className="flex flex-col gap-4 px-4  h-full overflow-y-scroll hide-scrollbar">
-                {cart.map((item, index) => (
-                  <div
-                    key={item.id}
-                    className={`flex justify-between ${
-                      index === cart.length - 1 ? "border-b-0" : "border-b "
-                    } py-2`}
-                  >
-                    <div className="flex gap-2">
-                      <div className="aspect-square overflow-hidden border-2 rounded-lg">
-                        <Image
-                          src={item.image}
-                          width={50}
-                          height={50}
-                          alt={`${item.title}`}
-                          className="object-cover h-full w-full"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="font-medium text-lg">{item.title}</p>
-                        <p>${item.price}</p>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => removeFromCart(item.id)}
-                      type="button"
-                      className="cursor-pointer"
-                    >
-                      <TfiClose /> <span className="sr-only">remove</span>
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <SheetFooter>
-                <Button type="submit">Proceed to checkout</Button>
+              <CartItems />
+              <SheetFooter className="border-t">
+                <div className="flex items-center justify-between">
+                  <p>Subtotal</p>
+                  <p>${cart.reduce((acc, item) => acc + item.price, 0)}</p>
+                </div>{" "}
+                <Link
+                  href={"/checkout"}
+                  onClick={() => setIsSheetOpen(false)}
+                  className="mt-4 text-center border text-white p-2 rounded-lg bg-black hover:bg-black/90"
+                >
+                  Proceed to checkout
+                </Link>
                 <SheetClose asChild>
                   <Button variant="outline">Close</Button>
                 </SheetClose>
