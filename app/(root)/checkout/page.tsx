@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { z } from "zod";
@@ -20,10 +20,20 @@ import CartItems from "@/components/CartItems";
 import { CiTrash } from "react-icons/ci";
 import "react-phone-number-input/style.css";
 import PhoneInputWithCountry from "react-phone-number-input/react-hook-form";
-import { Textarea } from "@/components/ui/textarea";
+import { BsCreditCard } from "react-icons/bs";
 import { formatMoneyDisplay, addMoney } from "@/lib/utils";
 import Link from "next/link";
+import { CiDeliveryTruck } from "react-icons/ci";
 
+import axios from "axios";
+
+declare global {
+  interface Window {
+    FlutterwaveCheckout: any;
+  }
+}
+
+const PUBLIC_KEY = "";
 const formSchema = z.object({
   fullname: z.string().min(3),
   phone: z.string().min(3),
@@ -36,6 +46,8 @@ const formSchema = z.object({
 });
 const page = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [paymentVerified, setPaymentVerified] = useState(false);
   const { clearCart, cart } = useCart();
   const deliveryFee = 20;
   const subtotal = cart.reduce((acc, item) => addMoney(acc, item.price), 0);
@@ -52,6 +64,55 @@ const page = () => {
       country: "",
     },
   });
+
+  const makePayment = () => {
+    if (!window.FlutterwaveCheckout) {
+      console.error("FlutterwaveCheckout not loaded yet");
+      return;
+    }
+    try {
+      setLoading(true);
+      window.FlutterwaveCheckout({
+        public_key: "FLWPUBK_TEST-a4afdff8027882794a525f2ad6d1b494-X",
+        tx_ref: Date.now(),
+        amount: total,
+        currency: "NGN",
+        payment_options: "card,ussd,banktransfer",
+        redirect_url: "http://localhost:3000/checkout",
+        customer: {
+          email: "customer@example.com",
+          phone_number: "07000000000",
+          name: "John Doe",
+        },
+        callback: async function (data: any) {
+          console.log(data);
+          try {
+            const res = await axios.post("/api/verify-payment", {
+              transaction_id: data.transaction_id,
+            });
+            console.log("res", res);
+            if (res.data.verified) {
+              setPaymentVerified(true);
+              clearCart();
+              // Route back to checkout page immediately after successful verification
+              router.push("/checkout");
+            }
+          } catch (error) {
+            console.log("error", error);
+          }
+        },
+        onclose: function () {
+          // This will be called when the payment modal is closed
+          // The routing is now handled in the callback function above
+        },
+      });
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return cart.length > 0 ? (
     <div className="flex flex-col gap-10  px-6 pt-20 lg:px-20 w-full">
       <div className="flex items-start">
@@ -169,6 +230,20 @@ const page = () => {
               <p className="font-medium text-lg">Total</p>
               <p>{formatMoneyDisplay(total)}</p>
             </div>
+          </div>
+          <div className="flex flex-col gap-3">
+            <Button
+              onClick={makePayment}
+              disabled={loading}
+              className="flex items-center cursor-pointer p-6 bg-yellow-500 hover:bg-yellow-400 font-bold text-lg text-black justify-center gap-4"
+            >
+              Pay with Flutterwave
+              <BsCreditCard className="text-xl" />
+            </Button>
+            <Button className="flex items-center p-6 cursor-pointer text-lg font-bold gap-4">
+              Pay on delivery
+              <CiDeliveryTruck className="text-4xl" />
+            </Button>
           </div>
         </section>
       </div>

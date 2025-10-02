@@ -29,7 +29,7 @@ const Hero = () => {
     }
   };
   return (
-    <section className="flex flex-col  gap-6 lg:flex-row justify-between  pt-10 lg:pt-20">
+    <section className="flex flex-col lg:px-10  gap-6 lg:flex-row justify-between  pt-10 lg:pt-20">
       <div className="flex flex-col justify-between lg:items-start gap-3 w-screen  pr-8">
         <div className="flex flex-col gap-4">
           <h2 className="text-4xl lg:text-7xl font-bold">

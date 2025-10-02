@@ -19,6 +19,7 @@ import {
 import { useCart } from "./context/CartContext";
 import Image from "next/image";
 import CartItems from "./CartItems";
+import { formatMoneyDisplay } from "@/lib/utils";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -38,7 +39,7 @@ const Navbar = () => {
         isOpen ? "bg-white" : "bg-white/80"
       }`}
     >
-      <div className="2xl:container 2xl:mx-auto   backdrop-blur-md flex p-4 justify-between items-center h-full">
+      <div className="2xl:container 2xl:mx-auto  lg:px-20   backdrop-blur-md flex p-4 justify-between items-center h-full">
         <Link href={"/"} className="text-xl font-bold z-50">
           ArtLoom
         </Link>
@@ -71,7 +72,11 @@ const Navbar = () => {
               <SheetFooter className="border-t">
                 <div className="flex items-center justify-between">
                   <p>Subtotal</p>
-                  <p>${cart.reduce((acc, item) => acc + item.price, 0)}</p>
+                  <p>
+                    {formatMoneyDisplay(
+                      cart.reduce((acc, item) => acc + item.price, 0)
+                    )}
+                  </p>
                 </div>{" "}
                 <Link
                   href={"/checkout"}

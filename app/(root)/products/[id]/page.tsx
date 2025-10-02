@@ -89,7 +89,7 @@ const page = ({ params }: { params: Promise<{ id: string }> }) => {
   return loading ? (
     <div className="flex justify-center items-center">Loading...</div>
   ) : (
-    <div className="flex flex-col gap-10  px-6 pt-20 lg:px-20 w-full">
+    <div className="flex flex-col gap-10  px-6 pt-20 lg:px-20 w-full 2xl:container 2xl:mx-auto">
       <div className="flex items-start">
         <Button onClick={() => router.back()} className="cursor-pointer">
           <MdKeyboardArrowLeft />

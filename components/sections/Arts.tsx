@@ -21,7 +21,7 @@ const Arts = () => {
     }, 1000);
   };
   return (
-    <section className="flex flex-col  gap-10 2xl:container 2xl:mx-auto">
+    <section className="flex flex-col  lg:px-10  gap-10 2xl:container 2xl:mx-auto">
       <div className="flex items-center gap-4">
         <button>All</button>
         <button>Painting</button>
